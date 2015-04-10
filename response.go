@@ -24,6 +24,22 @@ func NewResponse() *Response {
 	return r
 }
 
+func ErrorXML(title, subtitle, arg string) string {
+	r := NewResponse()
+	item := ResponseItem{
+		Valid:    false,
+		UID:      "error",
+		Title:    title,
+		Subtitle: subtitle,
+		Arg:      arg,
+		Icon:     "/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns",
+	}
+	r.AddItem(&item)
+	str, _ := r.ToXML()
+
+	return str
+}
+
 func (r *Response) AddItem(item *ResponseItem) *Response {
 	r.Items = append(r.Items, *item)
 

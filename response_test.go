@@ -15,6 +15,16 @@ func TestResponse_NewResponse(t *testing.T) {
 	}
 }
 
+func TestResponse_ErrorXML(t *testing.T) {
+	actual := ErrorXML("foo", "bar", "baz")
+	expected := `<?xml version="1.0" encoding="UTF-8"?>
+<items><item valid="false" arg="baz" uid="error"><title>foo</title><subtitle>bar</subtitle><icon>/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns</icon></item></items>`
+
+	if actual != expected {
+		t.Errorf("expected %v to eq %v", actual, expected)
+	}
+}
+
 func TestResponse_AddItem(t *testing.T) {
 	r := NewResponse()
 
