@@ -54,6 +54,7 @@ func main() {
 
 ## Example
 
+* [alfred2-font-awesome-workflow](https://github.com/ruedap/alfred2-font-awesome-workflow)
 * [alfred-emma-css-workflow](https://github.com/ruedap/alfred-emma-css-workflow)
 
 
