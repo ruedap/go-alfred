@@ -1,6 +1,10 @@
 package alfred
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"fmt"
+	"strings"
+)
 
 type Response struct {
 	XMLName xml.Name `xml:"items"`
@@ -15,6 +19,7 @@ type ResponseItem struct {
 	Title    string   `xml:"title"`
 	Subtitle string   `xml:"subtitle"`
 	Icon     string   `xml:"icon"`
+	Extra    map[string]string
 }
 
 func NewResponse() *Response {
@@ -50,4 +55,23 @@ func (r *Response) ToXML() (string, error) {
 	var x, err = xml.Marshal(r)
 
 	return xml.Header + string(x), err
+}
+
+func (ri ResponseItem) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	start.Name.Local = "item"
+	start.Attr = []xml.Attr{
+		{Name: xml.Name{Local: "valid"}, Value: fmt.Sprint(ri.Valid)},
+		{Name: xml.Name{Local: "arg"}, Value: ri.Arg},
+		{Name: xml.Name{Local: "uid"}, Value: ri.UID},
+	}
+	e.EncodeToken(start)
+	e.EncodeElement(ri.Title, xml.StartElement{Name: xml.Name{Local: "title"}})
+	e.EncodeElement(ri.Subtitle, xml.StartElement{Name: xml.Name{Local: "subtitle"}})
+	e.EncodeElement(ri.Icon, xml.StartElement{Name: xml.Name{Local: "icon"}})
+	for k, v := range ri.Extra {
+		l := strings.ToLower(k)
+		e.EncodeElement(v, xml.StartElement{Name: xml.Name{Local: l}})
+	}
+	e.EncodeToken(start.End())
+	return nil
 }

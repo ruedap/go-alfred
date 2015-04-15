@@ -74,3 +74,26 @@ func TestResponse_ToXML_Blank(t *testing.T) {
 		t.Errorf("expected %v to eq %v", actual, expected)
 	}
 }
+
+func TestResponse_ToXML_Extra(t *testing.T) {
+	ri := ResponseItem{
+		Valid: true,
+		Title: "foo",
+		Extra: map[string]string{
+			"FOOBAR": "BAZ",
+		},
+	}
+	r := NewResponse()
+	r.AddItem(&ri)
+
+	actual, err := r.ToXML()
+	if err != nil {
+		t.Error("failed to convert to XML")
+	}
+
+	expected := `<?xml version="1.0" encoding="UTF-8"?>
+<items><item valid="true" arg="" uid=""><title>foo</title><subtitle></subtitle><icon></icon><foobar>BAZ</foobar></item></items>`
+	if actual != expected {
+		t.Errorf("expected %v to eq %v", actual, expected)
+	}
+}
